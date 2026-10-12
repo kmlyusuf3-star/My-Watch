@@ -21,7 +21,7 @@ function App() {
   // Begitu juga dengan episodesList, kita ingin menyimpan data episode ke localStorage setiap kali episodesList berubah. Jadi kita menambahkan useEffect kedua untuk saveEpisodes.
   useEffect(() => { saveEpisodes(episodesList); }, [episodesList]);
 
-const handleGenerateDummyData = () => {
+  const handleGenerateDummyData = () => {
     // 1. Data Tontonan (Series & Movie)
     const dummySeries: Series[] = [
       { 
@@ -39,7 +39,7 @@ const handleGenerateDummyData = () => {
         type: "Movie", 
         year: 2016, 
         genre: "Perang, Biografi, Drama, Sejarah", 
-        status: "Completed",
+        status: "Completed", // Sebagai contoh awal, bisa diubah nanti
         description: "Hacksaw Ridge adalah film perang biografi berdasarkan kisah nyata Desmond Doss, seorang tentara medis Amerika Serikat pada Perang Dunia II yang menolak menggunakan senjata karena keyakinan Kristennya. Meski menghadapi tekanan militer, ia mempertaruhkan nyawanya untuk menyelamatkan puluhan tentara di Pertempuran Okinawa, membuktikan bahwa keberanian sejati juga berarti mempertahankan prinsip dan menyelamatkan kehidupan."
       }
     ];
@@ -113,6 +113,13 @@ const handleGenerateDummyData = () => {
     if (window.confirm("Yakin ingin menghapus episode ini?")) {
       setEpisodeList((prev) => prev.filter((ep) => ep.id !== id));
     }
+  };
+
+  // BARU: Fungsi khusus untuk langsung menamatkan Movie
+  const handleMarkCompleted = (seriesId: string) => {
+    setSeriesList(prev => prev.map(series => 
+      series.id === seriesId ? { ...series, status: "Completed" } : series
+    ));
   };
 
   // =========================================================================
@@ -207,6 +214,8 @@ const handleGenerateDummyData = () => {
               setCurrentView("edit_episode");
             }}
             onDeleteEpisode={handleDeleteEpisode}
+            // BARU: Sambungkan mesin penamat Movie ke halaman detail
+            onMarkCompleted={handleMarkCompleted} 
           />
         )}
 

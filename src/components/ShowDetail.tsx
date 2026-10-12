@@ -13,10 +13,11 @@ interface ShowDetailProps {
   onDelete: () => void;
   onEditEpisode: (episodeId: string) => void;
   onDeleteEpisode: (episodeId: string) => void;
+  onMarkCompleted: (seriesId: string) => void; // BARU: Menangkap mesin penamat Movie
 }
 
 export function ShowDetail({ 
-  series, episodes, onBack, onAddEpisode, onToggleWatched, onEdit, onDelete, onEditEpisode, onDeleteEpisode 
+  series, episodes, onBack, onAddEpisode, onToggleWatched, onEdit, onDelete, onEditEpisode, onDeleteEpisode, onMarkCompleted 
 }: ShowDetailProps) {
   
   const progress = calculateProgress(series.id, episodes);
@@ -67,9 +68,22 @@ export function ShowDetail({
             {series.description || "Belum ada deskripsi untuk tontonan ini."}
           </p>
           
-          <div className="mb-4 flex items-center gap-2">
-            <span className="font-semibold">Status:</span> 
-            <span className="text-purple-600 dark:text-purple-400 font-medium">{series.status}</span>
+          {/* BARU: Area Status dan Tombol "Tandai Sudah Ditonton" */}
+          <div className="mb-4 flex flex-wrap items-center gap-4">
+            <div>
+              <span className="font-semibold">Status:</span> 
+              <span className="ml-2 text-purple-600 dark:text-purple-400 font-medium">{series.status}</span>
+            </div>
+            
+            {/* Tombol ini HANYA muncul jika tipenya "Movie" DAN statusnya belum "Completed" */}
+            {series.type === "Movie" && series.status !== "Completed" && (
+              <button 
+                onClick={() => onMarkCompleted(series.id)}
+                className="px-3 py-1.5 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-md text-sm font-medium hover:bg-green-200 transition-colors border border-green-200 dark:border-green-800 flex items-center gap-1 shadow-sm"
+              >
+                ✓ Tandai Sudah Ditonton
+              </button>
+            )}
           </div>
 
           {/* BARU: Kotak kecil minimalis yang menampilkan Total Season dan Episode */}
